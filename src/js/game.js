@@ -1,8 +1,11 @@
 import '../css/style.css'
 import { Actor, Engine, Vector, DisplayMode } from "excalibur"
 import { Resources, ResourceLoader } from './resources.js'
+import { Background } from './background.js'
+import { Playership } from './playership.js'
+import { Asteroid } from './asteroid.js'
 
-export class Game extends Engine {
+class Game extends Engine {
 
     constructor() {
         super({ 
@@ -11,22 +14,27 @@ export class Game extends Engine {
             maxFps: 60,
             displayMode: DisplayMode.FitScreen
          })
+        this.showDebug = true
         this.start(ResourceLoader).then(() => this.startGame())
+        
     }
 
     startGame() {
         console.log("start de game!")
-        const fish = new Actor()
-        fish.graphics.use(Resources.Fish.toSprite())
-        fish.pos = new Vector(500, 300)
-        fish.vel = new Vector(-10,0)
-        fish.events.on("exitviewport", (e) => this.fishLeft(e))
-        this.add(fish)
+
+        let background = new Background
+        this.add(background)
+
+        this.player = new Playership()
+        this.add(this.player)
+
+        for (let i = 0; i < 4; i++) {
+            let asteroidOne = new Asteroid()
+            this.add(asteroidOne)
+        }
+
     }
 
-    fishLeft(e) {
-        e.target.pos = new Vector(1350, 300)
-    }
 }
 
 new Game()

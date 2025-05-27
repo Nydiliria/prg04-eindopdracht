@@ -22,4 +22,4 @@
 
 ### Bewerk deze readme file
 
-Verwijder deze instructies, plaats hier een beschrijving van jouw game.
+

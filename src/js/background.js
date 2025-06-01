@@ -1,39 +1,50 @@
-import { Actor, Vector, Sprite } from "excalibur"
+import { Actor, Vector } from "excalibur"
 import { Resources } from './resources.js'
 
 export class Background extends Actor {
-    sprite
+    bg1
+    bg2
+    speed = 50 // pixels per second
 
     onInitialize(engine) {
-        this.sprite = Resources.Background.toSprite()
-        this.anchor = Vector.Zero
-        this.graphics.use(this.sprite)
-        this.pos = new Vector(0, 0)
-        const scaleX = engine.drawWidth / Resources.Background.width
-        const scaleY = engine.drawHeight / Resources.Background.height
-        this.scale = new Vector(scaleX, scaleY)
+        const width = engine.drawWidth
+        const height = engine.drawHeight
+
+        this.z = -100
+
+        this.bg1 = new Actor({ width, height, anchor: Vector.Zero })
+        // Stretch the sprite to fill the actor
+        const sprite1 = Resources.Background.toSprite()
+        sprite1.width = width
+        sprite1.height = height
+        this.bg1.graphics.use(sprite1)
+        this.bg1.pos = new Vector(0, 0)
+        this.bg1.z = -100
+
+        this.bg2 = new Actor({ width, height, anchor: Vector.Zero })
+        const sprite2 = Resources.Background.toSprite()
+        sprite2.width = width
+        sprite2.height = height
+        this.bg2.graphics.use(sprite2)
+        this.bg2.pos = new Vector(width, 0)
+        this.bg2.z = -100
+
+        this.addChild(this.bg1)
+        this.addChild(this.bg2)
     }
 
-    onPostUpdate(engine, delta) {
-        this.sprite.sourceView.x += 0.05 * delta
-        if (this.sprite.sourceView.x > this.sprite.image.width - this.sprite.sourceView.width) {
-            this.sprite.sourceView.x = 0
+    onPreUpdate(engine, delta) {
+        const move = (this.speed * delta) / 1000
+        this.bg1.pos.x -= move
+        this.bg2.pos.x -= move
+
+        const width = engine.drawWidth
+
+        if (this.bg1.pos.x <= -width) {
+            this.bg1.pos.x = this.bg2.pos.x + width
+        }
+        if (this.bg2.pos.x <= -width) {
+            this.bg2.pos.x = this.bg1.pos.x + width
         }
     }
 }
-
-
-    /* sprite
-
-    onInitialize(engine){
-        this.sprite = new Sprite({
-            image: Resources.Background,
-            sourceView: { x: 0, y: 0, width: engine.drawWidth, height: engine.drawHeight }
-        })
-        this.anchor = Vector.Zero
-        this.graphics.use(this.sprite)
-    }
-
-    onPostUpdate(engine, delta) {
-        this.sprite.sourceView.x += .05 * delta;
-    } */

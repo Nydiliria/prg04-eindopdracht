@@ -8,6 +8,13 @@ const Resources = {
     Bullet: new ImageSource('./images/bullet.png'),
     Healthpack: new ImageSource('./images/healthpack.png'),
     Blob: new ImageSource('./images/blob.webp'),
+    Explosion: new ImageSource('./images/explosion.png'),
+
+    ExplosionSound : new Sound ("./sounds/exploding.mp3"),
+    Flying : new Sound ("./sounds/flying.mp3"),
+    Heal : new Sound ("./sounds/heal.mp3"),
+    Shoot : new Sound ("./sounds/shoot.mp3"),
+    Death : new Sound ("./sounds/alienDeath.mp3"),
 }
 
 

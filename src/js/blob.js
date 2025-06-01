@@ -4,8 +4,8 @@ import { Resources } from './resources'
 export class Blob extends Actor {
     constructor() {
         super({
-            width: 100, 
-            height: 100,
+            width: 1000, 
+            height: 1000,
             collisionType: CollisionType.Active
         })
         this.graphics.use(Resources.Blob.toSprite())

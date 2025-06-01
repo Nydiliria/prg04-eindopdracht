@@ -1,11 +1,11 @@
-import '../css/style.css'
-import { Engine, DisplayMode } from "excalibur"
+import { Engine, DisplayMode, Label, Color, Vector } from "excalibur"
 import { Resources, ResourceLoader } from './resources.js'
 import { Background } from './background.js'
 import { Playership } from './playership.js'
 import { Asteroid } from './asteroid.js'
 import { UI } from './UI.js'
 import { Blob } from './blob.js'
+import { Healthpack } from './healthpack.js'
 
 class Game extends Engine {
 
@@ -16,43 +16,57 @@ class Game extends Engine {
             maxFps: 60,
             displayMode: DisplayMode.FitScreen
         })
-        this.showDebug = true
+        this.toggleDebug()
         this.start(ResourceLoader).then(() => this.startGame())
     }
 
     startGame() {
         this.currentScene.clear()
 
-        const ui = new UI()
+        let ui = new UI()
         this.add(ui)
 
-        const background = new Background()
+        let background = new Background()
         this.add(background)
 
         this.player = new Playership(ui)
         this.add(this.player)
 
-
-        const lanes = [100, 250, 400, 550]
+        let lanes = [100, 250, 400, 550]
         for (let i = 0; i < 4; i++) {
-        this.clock.schedule(() => {
-            const asteroid = new Asteroid(lanes[i])
-            this.add(asteroid)
-        }, i * 2000)
+            this.clock.schedule(() => {
+                let asteroid = new Asteroid(lanes[i])
+                this.add(asteroid)
+            }, i * 2000)
         }
 
         this.clock.schedule(() => {
-        const blob = new Blob()
-        this.add(blob)
-        }, 20000)
+            let blob = new Blob()
+            this.add(blob)
+        }, 100)
 
+        let healthpack = new Healthpack()
+        this.add(healthpack)
     }
 
     gameOver() {
         this.currentScene.clear()
+
+        let gameOverBackground = new Background()
+        this.add(gameOverBackground)
+        
+        const gameOverLabel = new Label({
+            text: "GAME OVER",
+            pos: new Vector(this.drawWidth / 2, this.drawHeight / 2),
+            color: Color.Red,
+            fontSize: 120,
+            anchor: new Vector(0.5, 0.5)
+        })
+        this.add(gameOverLabel)
+
         setTimeout(() => {
             this.startGame()
-        }, 0)
+        }, 2000)
     }
 }
 

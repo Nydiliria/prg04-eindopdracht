@@ -5,13 +5,11 @@ import { Blob } from "./blob"
 import { UI } from "./UI"
 import { Bullet } from "./bullet"
 import { Healthpack } from "./healthpack"
-import { Explosion } from "./explosion"
 
 export class Playership extends Actor {
-    
     ui
-    health = 1
-    maxHealth = 1
+    #health = 1
+    #maxHealth = 1
 
     constructor(ui) {
         super({
@@ -26,7 +24,7 @@ export class Playership extends Actor {
     }
 
     onInitialize(engine) {
-        this.on('collisionstart', (event) => this.hitSomething(event))
+        this.on('collisionstart', (event) => this.#hitSomething(event))
     }
 
     onPreUpdate(engine) {
@@ -42,44 +40,44 @@ export class Playership extends Actor {
         this.vel = new Vector(xspeed, yspeed)
 
         if (kb.wasPressed(Keys.Space)) {
-            this.shoot()
+            this.#shoot()
         }
     }
 
-    hitSomething(event) {
+    #hitSomething(event) {
         if (event.other.owner instanceof Asteroid) {
             this.scene.engine.gameOver()
         }
 
         if (event.other.owner instanceof Blob) {
-            this.reduceHealth(0.5)
+            this.#reduceHealth(0.5)
             event.other.owner.blobLeft({ target: event.other.owner })
         }
 
         if (event.other.owner instanceof Healthpack) {
-            this.gainHealth(0.5)
+            this.#gainHealth(0.5)
             event.other.owner.healthpackLeft({ target: event.other.owner })
         }
     }
 
-    reduceHealth(amount) {
+    #reduceHealth(amount) {
         Resources.Death.play()
-        this.health -= amount
-        if (this.health < 0) this.health = 0
-        this.ui.updateHealth(this.health / this.maxHealth)
-        if (this.health <= 0) {
+        this.#health -= amount
+        if (this.#health < 0) this.#health = 0
+        this.ui.updateHealth(this.#health / this.#maxHealth)
+        if (this.#health <= 0) {
             this.scene.engine.gameOver()
         }
     }
 
-    gainHealth(amount) {
+    #gainHealth(amount) {
         Resources.Heal.play()
-        this.health += amount
-        if (this.health > this.maxHealth) this.health = this.maxHealth
-        this.ui.updateHealth(this.health / this.maxHealth)
+        this.#health += amount
+        if (this.#health > this.#maxHealth) this.#health = this.#maxHealth
+        this.ui.updateHealth(this.#health / this.#maxHealth)
     }
 
-    shoot() {
+    #shoot() {
         Resources.Shoot.play()
         let a = new Bullet(this.pos.x, this.pos.y, this.ui)
         this.scene.add(a)

@@ -9,6 +9,9 @@ import { Healthpack } from './healthpack.js'
 
 class Game extends Engine {
 
+    #player
+    #ui
+
     constructor() {
         super({ 
             width: 1280,
@@ -23,14 +26,14 @@ class Game extends Engine {
     startGame() {
         this.currentScene.clear()
 
-        let ui = new UI()
-        this.add(ui)
+        this.#ui = new UI()
+        this.add(this.#ui)
 
         let background = new Background()
         this.add(background)
 
-        this.player = new Playership(ui)
-        this.add(this.player)
+        this.#player = new Playership(this.#ui)
+        this.add(this.#player)
 
         let lanes = [100, 250, 400, 550]
         for (let i = 0; i < 4; i++) {
